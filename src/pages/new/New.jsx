@@ -5,7 +5,19 @@ import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUpload
 import { useState } from 'react';
 
 const New = ({ inputs, title }) => {
-	const [file, setFile] = useState('');
+	const [video, setVideo] = useState(null);
+	const [img, setImg] = useState(null);
+	const [imgTitle, setImgTitle] = useState(null);
+	const [imgSm, setImgSm] = useState(null);
+	const [trailer, setTrailer] = useState(null);
+	const [media, setMedia] = useState(null);
+
+	const handleChange = (e) => {
+		const value = e.target.value;
+		setVideo({ ...video, [e.target.name]: value });
+	};
+
+	console.log(imgSm);
 
 	return (
 		<div className='new'>
@@ -18,31 +30,52 @@ const New = ({ inputs, title }) => {
 				<div className='bottom'>
 					<div className='left'>
 						<img
-							src={file ? URL.createObjectURL(file) : '/no-image-alt.jpg'}
+							src={img ? URL.createObjectURL(img) : '/no-image-alt.jpg'}
 							alt=''
 						/>
 					</div>
 					<div className='right'>
-						<form action=''>
+						<form>
 							<div className='form-input'>
-								<label htmlFor='file'>
+								<label htmlFor='img'>
 									Image:
 									<DriveFolderUploadOutlinedIcon className='icon' />
 								</label>
 								<input
 									type='file'
-									id='file'
-									onChange={(e) => setFile(e.target.files[0])}
+									id='img'
+									onChange={(e) => setImg(e.target.files[0])}
 									hidden
 								/>
 							</div>
+							{title === 'Add New Video' ? (
+								<div className='form-input'>
+									<label htmlFor='isSeries'>isSeries</label>
+									<select name='isSeries' id='isSeries'>
+										<option value='false'>No</option>
+										<option value='true'>Yes</option>
+									</select>
+								</div>
+							) : null}
 							{inputs.map((input) => (
 								<div className='form-input' key={input.id}>
-									<label htmlFor={input.label}>{input.label}</label>
+									<label htmlFor={input.label}>
+										{input.type === 'file' ? (
+											<>
+												{input.label}:
+												<DriveFolderUploadOutlinedIcon className='icon' />
+											</>
+										) : (
+											input.label
+										)}
+									</label>
 									<input
 										id={input.label}
+										name={input.name}
 										type={input.type}
 										placeholder={input.placeholder}
+										hidden={input.type === 'file'}
+										onChange={input.type === 'file' ? input.set : handleChange}
 									/>
 								</div>
 							))}

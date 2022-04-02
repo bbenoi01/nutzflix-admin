@@ -1,5 +1,9 @@
-const DarkModeReducer = (state, action) => {
-	const { type } = action;
+import { types } from '../../types';
+
+const INITIAL_STATE = {};
+
+const ListReducer = (state = INITIAL_STATE, action) => {
+	const { type, payload } = action;
 
 	switch (type) {
 		case 'LIGHT': {
@@ -24,4 +28,4 @@ const DarkModeReducer = (state, action) => {
 	}
 };
 
-export default DarkModeReducer;
+export default ListReducer;
