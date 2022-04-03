@@ -1,12 +1,59 @@
+import { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import './home.scss';
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Widget from '../../components/widget/Widget';
-import Featured from '../../components/featured/Featured';
+// import Featured from '../../components/featured/Featured';
+import NewUserInfo from '../../components/newUserInfo/NewUserInfo';
 import Chart from '../../components/chart/Chart';
 import TransactionTable from '../../components/transactionTable/TransactionTable';
-import './home.scss';
 
 const Home = () => {
+	const MONTHS = useMemo(
+		() => [
+			'Jan',
+			'Feb',
+			'Mar',
+			'Apr',
+			'May',
+			'Jun',
+			'Jul',
+			'Aug',
+			'Sep',
+			'Oct',
+			'Nov',
+			'Dec',
+		],
+		[]
+	);
+	const [userStats, setUserStats] = useState([]);
+
+	useEffect(() => {
+		const getStats = async () => {
+			try {
+				const res = await axios.get('/users/stats', {
+					headers: {
+						Authorization:
+							'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDM4YjZjY2NlM2I5YjBjYzQyNGQwMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0ODgyNzcyMCwiZXhwIjoxNjQ5MjU5NzIwfQ.uaHCZbK5f7zHg03EnTi2-2ZZV3-A_KVRXK46Q5Yb7yI',
+					},
+				});
+				const statsList = res?.data?.sort(function (a, b) {
+					return a._id - b._id;
+				});
+				statsList.map((item) =>
+					setUserStats((prev) => [
+						...prev,
+						{ name: MONTHS[item._id - 1], 'New Users': item?.total },
+					])
+				);
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		getStats();
+	}, [MONTHS]);
+
 	return (
 		<div className='home'>
 			<Sidebar />
@@ -19,8 +66,8 @@ const Home = () => {
 					<Widget type='balance' />
 				</div>
 				<div className='charts'>
-					<Featured />
-					<Chart title='Last 6 Months (Revenue)' aspect={4 / 1} />
+					<NewUserInfo />
+					<Chart data={userStats} title='User Analytics' aspect={4 / 1} />
 				</div>
 				<div className='list-container'>
 					<div className='list-title'>Latest Transactions</div>

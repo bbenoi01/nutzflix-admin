@@ -3,7 +3,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import StoreIcon from '@mui/icons-material/Store';
+import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import InsertChartIcon from '@mui/icons-material/InsertChart';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -12,11 +12,14 @@ import SettingsSystemDaydreamOutlinedIcon from '@mui/icons-material/SettingsSyst
 import PsychologyOutlinedIcon from '@mui/icons-material/PsychologyOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
-import { DarkModeContext } from '../../context/darkModeContext';
+import { useDispatch } from 'react-redux';
+import {
+	lightMode,
+	darkMode,
+} from '../../reducers/darkModeReducer/DarkModeActions';
 
 const Sidebar = () => {
-	const { dispatch } = useContext(DarkModeContext);
+	const dispatch = useDispatch();
 
 	return (
 		<div className='sidebar'>
@@ -40,10 +43,10 @@ const Sidebar = () => {
 							<span>Users</span>
 						</li>
 					</Link>
-					<Link to='/products' className='router-link'>
+					<Link to='/videos' className='router-link'>
 						<li>
-							<StoreIcon className='icon' />
-							<span>Products</span>
+							<PlayIcon className='icon' />
+							<span>Videos</span>
 						</li>
 					</Link>
 					<li>
@@ -90,11 +93,11 @@ const Sidebar = () => {
 			<div className='bottom'>
 				<div
 					className='color-option'
-					onClick={() => dispatch({ type: 'LIGHT' })}
+					onClick={() => dispatch(lightMode())}
 				></div>
 				<div
 					className='color-option'
-					onClick={() => dispatch({ type: 'DARK' })}
+					onClick={() => dispatch(darkMode())}
 				></div>
 			</div>
 		</div>

@@ -6,7 +6,7 @@
 		width: 100%;
 		font-size: 24px;
 		color: gray;
-		margin-bottom: 10px;
+		margin-bottom: 20px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -23,51 +23,52 @@
 		}
 	}
 
-	.cell-with-img {
+	.cell-wrapper {
 		display: flex;
 		align-items: center;
 
-		.cell-img {
+		.image {
 			width: 32px;
 			height: 32px;
-			border-radius: 50%;
+			border-radius: 100%;
+			margin-right: 10px;
 			object-fit: cover;
-			margin-right: 20px;
 		}
 	}
 
-	.cell-with-status {
+	.status {
 		padding: 5px;
 		border-radius: 5px;
 
 		&.active {
-			background-color: rgba(0, 128, 0, 0.05);
 			color: green;
+			background: rgba(0, 128, 0, 0.151);
 		}
 		&.pending {
-			background-color: rgba(255, 217, 0, 0.05);
 			color: goldenrod;
+			background: rgba(189, 189, 3, 0.103);
 		}
 		&.passive {
-			background-color: rgba(255, 0, 0, 0.05);
 			color: crimson;
+			background: rgba(255, 0, 0, 0.2);
 		}
 	}
 
 	.cell-action {
 		display: flex;
+		justify-content: center;
 		align-items: center;
 		gap: 15px;
 
-		.view-button {
+		.edit-btn {
 			padding: 2px 5px;
 			border-radius: 5px;
-			color: darkblue;
-			border: 1px dotted rgba(0, 0, 139, 0.596);
+			color: darkgreen;
+			border: 1px dotted rgba(0, 100, 0, 0.562);
 			cursor: pointer;
 		}
 
-		.delete-button {
+		.delete-btn {
 			padding: 2px 5px;
 			border-radius: 5px;
 			color: crimson;

@@ -42,35 +42,67 @@ export const userInputs = [
 	},
 ];
 
-export const productInputs = [
+export const videoInputs = [
 	{
 		id: 1,
+		name: 'title',
 		label: 'Title',
 		type: 'text',
-		placeholder: 'Apple Macbook Pro',
+		placeholder: 'Free Guy...',
 	},
 	{
 		id: 2,
-		label: 'Description',
+		name: 'desc',
+		label: 'Synopsis',
 		type: 'text',
-		placeholder: 'Description',
+		placeholder: 'Synopsis',
 	},
 	{
 		id: 3,
-		label: 'Category',
+		name: 'year',
+		label: 'Year',
 		type: 'text',
-		placeholder: 'Computers',
+		placeholder: '1974...',
 	},
 	{
 		id: 4,
-		label: 'Price',
+		name: 'genre',
+		label: 'Genre',
 		type: 'text',
-		placeholder: '100',
+		placeholder: 'Horror...',
 	},
 	{
 		id: 5,
-		label: 'Stock',
+		name: 'runTime',
+		label: 'Run Time',
 		type: 'text',
-		placeholder: 'in stock',
+		placeholder: '108 min...',
+	},
+	{
+		id: 6,
+		name: 'rating',
+		label: 'Rating',
+		type: 'text',
+		placeholder: 'MPAA Rating...',
+	},
+	{
+		id: 7,
+		label: 'Title Image',
+		type: 'file',
+	},
+	{
+		id: 8,
+		label: 'Thumbnail',
+		type: 'file',
+	},
+	{
+		id: 9,
+		label: 'Trailer',
+		type: 'file',
+	},
+	{
+		id: 10,
+		label: 'Media',
+		type: 'file',
 	},
 ];

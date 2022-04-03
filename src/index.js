@@ -1,13 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import rootStore from './rootStore';
 import App from './App';
-import { DarkModeContextProvider } from './context/darkModeContext';
 
 render(
 	<React.StrictMode>
-		<DarkModeContextProvider>
+		<Provider store={rootStore}>
 			<App />
-		</DarkModeContextProvider>
+		</Provider>
 	</React.StrictMode>,
 	document.getElementById('root')
 );

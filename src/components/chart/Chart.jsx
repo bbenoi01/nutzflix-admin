@@ -8,16 +8,7 @@ import {
 	ResponsiveContainer,
 } from 'recharts';
 
-const data = [
-	{ name: 'January', Total: 1200 },
-	{ name: 'February', Total: 2100 },
-	{ name: 'March', Total: 800 },
-	{ name: 'April', Total: 1600 },
-	{ name: 'May', Total: 900 },
-	{ name: 'June', Total: 1700 },
-];
-
-const Chart = ({ aspect, title }) => {
+const Chart = ({ data, aspect, title }) => {
 	return (
 		<div className='chart'>
 			<div className='title'>{title}</div>
@@ -26,7 +17,7 @@ const Chart = ({ aspect, title }) => {
 					width={730}
 					height={250}
 					data={data}
-					margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+					margin={{ top: 0, right: 15, left: 15, bottom: -5 }}
 				>
 					<defs>
 						<linearGradient id='total' x1='0' y1='0' x2='0' y2='1'>
@@ -39,7 +30,7 @@ const Chart = ({ aspect, title }) => {
 					<Tooltip />
 					<Area
 						type='monotone'
-						dataKey='Total'
+						dataKey='New Users'
 						stroke='#8884d8'
 						fillOpacity={1}
 						fill='url(#total)'
