@@ -5,7 +5,7 @@ import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Widget from '../../components/widget/Widget';
 // import Featured from '../../components/featured/Featured';
-import NewUserInfo from '../../components/newUserInfo/NewUserInfo';
+import NewSubscriberInfo from '../../components/newSubscriberInfo/NewSubscriberInfo';
 import Chart from '../../components/chart/Chart';
 import TransactionTable from '../../components/transactionTable/TransactionTable';
 
@@ -27,7 +27,7 @@ const Home = () => {
 		],
 		[]
 	);
-	const [userStats, setUserStats] = useState([]);
+	const [subStats, setSubStats] = useState([]);
 
 	useEffect(() => {
 		const getStats = async () => {
@@ -42,9 +42,9 @@ const Home = () => {
 					return a._id - b._id;
 				});
 				statsList.map((item) =>
-					setUserStats((prev) => [
+					setSubStats((prev) => [
 						...prev,
-						{ name: MONTHS[item._id - 1], 'New Users': item?.total },
+						{ name: MONTHS[item._id - 1], 'New Subscribers': item?.total },
 					])
 				);
 			} catch (err) {
@@ -60,14 +60,14 @@ const Home = () => {
 			<div className='canvas'>
 				<Navbar />
 				<div className='widgets'>
-					<Widget type='user' />
+					<Widget type='sub' />
 					<Widget type='order' />
 					<Widget type='earning' />
 					<Widget type='balance' />
 				</div>
 				<div className='charts'>
-					<NewUserInfo />
-					<Chart data={userStats} title='User Analytics' aspect={4 / 1} />
+					<NewSubscriberInfo />
+					<Chart data={subStats} title='Subscriber Analytics' aspect={4 / 1} />
 				</div>
 				<div className='list-container'>
 					<div className='list-title'>Latest Transactions</div>

@@ -1,7 +1,7 @@
 import { types } from '../../types';
 
 const INITIAL_STATE = {
-	darkMode: false,
+	darkMode: JSON.parse(localStorage.getItem('darkMode')),
 };
 
 const DarkModeReducer = (state = INITIAL_STATE, action) => {

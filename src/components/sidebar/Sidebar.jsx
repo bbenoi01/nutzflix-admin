@@ -13,10 +13,13 @@ import PsychologyOutlinedIcon from '@mui/icons-material/PsychologyOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+
 import {
 	lightMode,
 	darkMode,
 } from '../../reducers/darkModeReducer/DarkModeActions';
+import { getSubs } from '../../reducers/subReducer/SubActions';
+import { getVideos } from '../../reducers/videoReducer/VideoActions';
 
 const Sidebar = () => {
 	const dispatch = useDispatch();
@@ -37,13 +40,23 @@ const Sidebar = () => {
 						<span>Dashboard</span>
 					</li>
 					<p className='title'>LISTS</p>
-					<Link to='/users' className='router-link'>
+					<Link
+						to='/subs'
+						state={{ dataType: 'subs' }}
+						className='router-link'
+						onClick={() => dispatch(getSubs())}
+					>
 						<li>
 							<PersonOutlineIcon className='icon' />
-							<span>Users</span>
+							<span>Subscribers</span>
 						</li>
 					</Link>
-					<Link to='/videos' className='router-link'>
+					<Link
+						to='/videos'
+						state={{ dataType: 'videos' }}
+						className='router-link'
+						onClick={() => dispatch(getVideos())}
+					>
 						<li>
 							<PlayIcon className='icon' />
 							<span>Videos</span>

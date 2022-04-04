@@ -13,11 +13,11 @@ function Widget({ type }) {
 	const diff = 20;
 
 	switch (type) {
-		case 'user':
+		case 'sub':
 			data = {
-				title: 'USERS',
+				title: 'SUBSCRIBERS',
 				isMoney: false,
-				link: 'See all users',
+				link: 'See all subs',
 				icon: (
 					<PersonOutlinedIcon
 						className='icon'
