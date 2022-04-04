@@ -9,8 +9,6 @@ import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import { useDispatch } from 'react-redux';
 import { toggleMode } from '../../reducers/darkModeReducer/DarkModeActions';
 
-import { logout } from '../../reducers/authReducer/AuthActions';
-
 const Navbar = () => {
 	const dispatch = useDispatch();
 
@@ -47,12 +45,7 @@ const Navbar = () => {
 						<ListOutlinedIcon className='icon' />
 					</div>
 					<div className='item'>
-						<img
-							src='/Helmet.jpg'
-							alt=''
-							className='avatar'
-							onClick={() => dispatch(logout())}
-						/>
+						<img src='/Helmet.jpg' alt='' className='avatar' />
 					</div>
 				</div>
 			</div>
