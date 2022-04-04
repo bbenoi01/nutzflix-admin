@@ -1,16 +1,16 @@
 import { types } from '../../types';
 
 const INITIAL_STATE = {
-	videos: JSON.parse(sessionStorage.getItem('videos')) || null,
+	subs: JSON.parse(sessionStorage.getItem('subs')) || null,
 	isFetching: false,
 	errors: {},
 };
 
-const VideoReducer = (state = INITIAL_STATE, action) => {
+const SubReducer = (state = INITIAL_STATE, action) => {
 	const { type, payload } = action;
 
 	switch (type) {
-		case types.GET_VIDEOS_START: {
+		case types.GET_SUBS_START: {
 			return {
 				...state,
 				isFetching: true,
@@ -18,40 +18,16 @@ const VideoReducer = (state = INITIAL_STATE, action) => {
 			};
 		}
 
-		case types.GET_VIDEOS_SUCCESS: {
+		case types.GET_SUBS_SUCCESS: {
 			return {
 				...state,
-				videos: payload,
-				errors: {},
-			};
-		}
-
-		case types.GET_VIDEOS_FAILURE: {
-			return {
-				...state,
+				subs: payload,
 				isFetching: false,
-				reeors: payload,
-			};
-		}
-
-		case types.DELETE_VIDEO_START: {
-			return {
-				...state,
-				isFetching: true,
 				errors: {},
 			};
 		}
 
-		case types.DELETE_VIDEO_SUCCESS: {
-			return {
-				...state,
-				isFetching: false,
-				videos: payload,
-				errors: {},
-			};
-		}
-
-		case types.DELETE_VIDEO_FAILURE: {
+		case types.GET_SUBS_FAILURE: {
 			return {
 				...state,
 				isFetching: false,
@@ -59,16 +35,41 @@ const VideoReducer = (state = INITIAL_STATE, action) => {
 			};
 		}
 
-		case types.CLEAR_VIDEOS: {
+		case types.DELETE_SUB_START: {
 			return {
 				...state,
-				videos: null,
+				isFetching: true,
+				errors: {},
+			};
+		}
+
+		case types.DELETE_SUB_SUCCESS: {
+			return {
+				...state,
+				subs: payload,
+				isFetching: false,
+				errors: {},
+			};
+		}
+
+		case types.DELETE_SUB_FAILURE: {
+			return {
+				...state,
+				isFetching: false,
+				errors: payload,
+			};
+		}
+
+		case types.CLEAR_SUBS: {
+			return {
+				...state,
+				subs: null,
 			};
 		}
 
 		case types.LOGOUT: {
 			return {
-				videos: null,
+				subs: null,
 				isFetching: false,
 				errors: {},
 			};
@@ -78,4 +79,4 @@ const VideoReducer = (state = INITIAL_STATE, action) => {
 	}
 };
 
-export default VideoReducer;
+export default SubReducer;

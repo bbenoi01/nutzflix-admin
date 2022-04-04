@@ -17,129 +17,165 @@ import { connect, useDispatch } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import {
-	getVideos,
-	deleteVideo,
-} from '../../reducers/videoReducer/VideoActions';
+import { deleteVideo } from '../../reducers/videoReducer/VideoActions';
+import { deleteSub } from '../../reducers/subReducer/SubActions';
 
-function descendingComparator(a, b, orderBy) {
-	if (b[orderBy] < a[orderBy]) {
-		return -1;
-	}
-	if (b[orderBy] > a[orderBy]) {
-		return 1;
-	}
-	return 0;
-}
-
-function getComparator(order, orderBy) {
-	return order === 'desc'
-		? (a, b) => descendingComparator(a, b, orderBy)
-		: (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-	const stabilizedThis = array.map((el, index) => [el, index]);
-	stabilizedThis.sort((a, b) => {
-		const order = comparator(a[0], b[0]);
-		if (order !== 0) {
-			return order;
-		}
-		return a[1] - b[1];
-	});
-	return stabilizedThis.map((el) => el[0]);
-}
-
-const headCells = [
-	{
-		id: 'id',
-		label: 'ID',
-	},
-	{
-		id: 'title',
-		label: 'Title',
-	},
-	{
-		id: 'genre',
-		label: 'Genre',
-	},
-	{
-		id: 'year',
-		label: 'Year',
-	},
-	{
-		id: 'rating',
-		label: 'Rating',
-	},
-	{
-		id: 'series',
-		label: 'Series',
-	},
-	{
-		id: 'action',
-		label: 'Action',
-	},
-];
-
-function EnhancedTableHead(props) {
-	const {
-		onSelectAllClick,
-		order,
-		orderBy,
-		numSelected,
-		rowCount,
-		onRequestSort,
-	} = props;
-	const createSortHandler = (property) => (e) => {
-		onRequestSort(e, property);
-	};
-
-	return (
-		<TableHead>
-			<TableRow>
-				<TableCell padding='checkbox'>
-					<Checkbox
-						color='primary'
-						indeterminate={numSelected > 0 && numSelected < rowCount}
-						checked={rowCount > 0 && numSelected === rowCount}
-						onChange={onSelectAllClick}
-						inputProps={{
-							'aria-label': 'select all desserts',
-						}}
-					/>
-				</TableCell>
-				{headCells.map((headCell) => (
-					<TableCell
-						key={headCell.id}
-						sortDirection={orderBy === headCell.id ? order : false}
-						align={headCell.id === 'action' ? 'center' : 'inherit'}
-					>
-						<TableSortLabel
-							active={orderBy === headCell.id}
-							direction={orderBy === headCell.id ? order : 'asc'}
-							onClick={createSortHandler(headCell.id)}
-						>
-							{headCell.label}
-							{orderBy === headCell.id ? (
-								<Box component='span' sx={visuallyHidden}>
-									{order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-								</Box>
-							) : null}
-						</TableSortLabel>
-					</TableCell>
-				))}
-			</TableRow>
-		</TableHead>
-	);
-}
-
-const DataTable = ({ videos }) => {
+const DataTable = ({ subs, videos, title }) => {
 	const location = useLocation();
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('id');
 	const [selected, setSelected] = useState([]);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [data, setData] = useState([]);
+
+	console.log('DATA', data);
+
+	const dispatch = useDispatch();
+
+	function descendingComparator(a, b, orderBy) {
+		if (b[orderBy] < a[orderBy]) {
+			return -1;
+		}
+		if (b[orderBy] > a[orderBy]) {
+			return 1;
+		}
+		return 0;
+	}
+
+	function getComparator(order, orderBy) {
+		return order === 'desc'
+			? (a, b) => descendingComparator(a, b, orderBy)
+			: (a, b) => -descendingComparator(a, b, orderBy);
+	}
+
+	function stableSort(array, comparator) {
+		const stabilizedThis = array.map((el, index) => [el, index]);
+		stabilizedThis.sort((a, b) => {
+			const order = comparator(a[0], b[0]);
+			if (order !== 0) {
+				return order;
+			}
+			return a[1] - b[1];
+		});
+		return stabilizedThis.map((el) => el[0]);
+	}
+
+	let headCells;
+
+	if (title === 'Videos') {
+		headCells = [
+			{
+				id: 'id',
+				label: 'ID',
+			},
+			{
+				id: 'title',
+				label: 'Title',
+			},
+			{
+				id: 'genre',
+				label: 'Genre',
+			},
+			{
+				id: 'year',
+				label: 'Year',
+			},
+			{
+				id: 'rating',
+				label: 'Rating',
+			},
+			{
+				id: 'series',
+				label: 'Series',
+			},
+			{
+				id: 'action',
+				label: 'Action',
+			},
+		];
+	} else {
+		headCells = [
+			{
+				id: 'id',
+				label: 'ID',
+			},
+			{
+				id: 'username',
+				label: 'Username',
+			},
+			{
+				id: 'email',
+				label: 'Email',
+			},
+			{
+				id: 'isAdmin',
+				label: 'is Admin',
+			},
+			{
+				id: 'joined',
+				label: 'Joined',
+			},
+			{
+				id: 'action',
+				label: 'Action',
+			},
+		];
+	}
+
+	function EnhancedTableHead(props) {
+		const {
+			onSelectAllClick,
+			order,
+			orderBy,
+			numSelected,
+			rowCount,
+			onRequestSort,
+		} = props;
+		const createSortHandler = (property) => (e) => {
+			onRequestSort(e, property);
+		};
+
+		return (
+			<TableHead>
+				<TableRow>
+					<TableCell padding='checkbox'>
+						<Checkbox
+							color='primary'
+							indeterminate={numSelected > 0 && numSelected < rowCount}
+							checked={rowCount > 0 && numSelected === rowCount}
+							onChange={onSelectAllClick}
+							inputProps={{
+								'aria-label': 'select all desserts',
+							}}
+						/>
+					</TableCell>
+					{headCells.map((headCell) => (
+						<TableCell
+							key={headCell.id}
+							sortDirection={orderBy === headCell.id ? order : false}
+							align={headCell.id === 'action' ? 'center' : 'inherit'}
+						>
+							<TableSortLabel
+								active={orderBy === headCell.id}
+								direction={orderBy === headCell.id ? order : 'asc'}
+								onClick={createSortHandler(headCell.id)}
+							>
+								{headCell.label}
+								{orderBy === headCell.id ? (
+									<Box component='span' sx={visuallyHidden}>
+										{order === 'desc'
+											? 'sorted descending'
+											: 'sorted ascending'}
+									</Box>
+								) : null}
+							</TableSortLabel>
+						</TableCell>
+					))}
+				</TableRow>
+			</TableHead>
+		);
+	}
 
 	const handleRequestSort = (e, property) => {
 		const isAsc = orderBy === property && order === 'asc';
@@ -149,7 +185,8 @@ const DataTable = ({ videos }) => {
 
 	const handleSelectAllClick = (e) => {
 		if (e.target.checked) {
-			const newSelecteds = videos?.map((n) => n.id);
+			let newSelecteds;
+			newSelecteds = data?.map((n) => n.id);
 			setSelected(newSelecteds);
 			return;
 		}
@@ -188,26 +225,32 @@ const DataTable = ({ videos }) => {
 	const isSelected = (id) => selected.indexOf(id) !== -1;
 
 	const emptyRows =
-		page > 0 ? Math.max(0, (1 + page) * rowsPerPage - videos?.length) : 0;
+		page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.length) : 0;
 
-	const handleDelete = (videoId) => {
-		dispatch(deleteVideo(videoId));
+	const handleDelete = (id) => {
+		if (title === 'Videos') {
+			dispatch(deleteVideo(id));
+		} else {
+			dispatch(deleteSub(id));
+		}
 	};
 
-	const dispatch = useDispatch();
-
 	useEffect(() => {
-		dispatch(getVideos());
-	}, [dispatch]);
+		if (location.state.dataType === 'subs') {
+			setData(subs);
+		} else if (location.state.dataType === 'videos') {
+			setData(videos);
+		}
+	}, [location.state.dataType, subs, videos]);
 
-	console.log(location);
+	console.log(location.state);
 
 	return (
 		<div className='data-table'>
 			<div className='data-table-title'>
-				Add New User
+				{title}
 				<Link
-					to={location.pathname === '/videos' ? '/videos/new' : '/users/new'}
+					to={location.pathname === '/videos' ? '/videos/new' : '/subs/new'}
 					className='link'
 				>
 					Add New
@@ -223,56 +266,74 @@ const DataTable = ({ videos }) => {
 								orderBy={orderBy}
 								onSelectAllClick={handleSelectAllClick}
 								onRequestSort={handleRequestSort}
-								rowCount={videos?.length}
+								rowCount={data?.length}
 							/>
 							<TableBody>
-								{stableSort(videos, getComparator(order, orderBy))
+								{stableSort(data, getComparator(order, orderBy))
 									.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-									.map((video, index) => {
-										const isItemSelected = isSelected(video?._id);
+									.map((item, index) => {
+										const isItemSelected = isSelected(item?._id);
 										const labelId = `enhanced-table-checkbox-${index}`;
 
 										return (
 											<TableRow
 												hover
-												onClick={(e) => handleClick(video?._id)}
+												onClick={(e) => handleClick(item?._id)}
 												role='checkbox'
 												tabIndex={-1}
-												key={video?._id}
+												key={item?._id}
 												selected={isItemSelected}
 											>
 												<TableCell padding='checkbox'>
 													<Checkbox color='primary' checked={isItemSelected} />
 												</TableCell>
 												<TableCell component={'th'} id={labelId} scope='row'>
-													{video?._id}
+													{item?._id}
 												</TableCell>
 												<TableCell className='center-cell'>
 													<div className='cell-wrapper'>
-														<img src={video?.img} alt='' className='image' />
-														{video?.title}
+														<img
+															src={
+																item?.img ||
+																item?.profilePhoto ||
+																'/no-image-alt.jpg'
+															}
+															alt=''
+															className='image'
+														/>
+														{item?.title || item?.username}
 													</div>
 												</TableCell>
-												<TableCell>{video?.genre}</TableCell>
-												<TableCell>{video?.year}</TableCell>
+												<TableCell>{item?.genre || item?.email}</TableCell>
 												<TableCell>
-													<span className={`rating ${video?.rating}`}>
-														{video?.rating}
-													</span>
+													{item?.year || item?.isAdmin.toString()}
 												</TableCell>
-												<TableCell>{video?.isSeries.toString()}</TableCell>
+												<TableCell>
+													{title === 'Videos' ? (
+														<span className={`rating ${item?.rating}`}>
+															{item?.rating}
+														</span>
+													) : (
+														item?.createdAt
+													)}
+												</TableCell>
+												<TableCell>{item?.isSeries.toString()}</TableCell>
 												<TableCell>
 													<div className='cell-action'>
 														<Link
-															to={`/videos/${video?._id}`}
-															state={{ video }}
+															to={
+																(title = 'Videos'
+																	? `/videos/${item?._id}`
+																	: `/subs/${item?._id}`)
+															}
+															state={{ item }}
 															style={{ textDecoration: 'none' }}
 														>
 															<EditIcon className='edit-btn' />
 														</Link>
 														<DeleteForeverIcon
 															className='delete-btn'
-															onClick={() => handleDelete(video?._id)}
+															onClick={() => handleDelete(item?._id)}
 														/>
 													</div>
 												</TableCell>
@@ -290,7 +351,7 @@ const DataTable = ({ videos }) => {
 					<TablePagination
 						rowsPerPageOptions={[5, 10, 25]}
 						component='div'
-						count={videos?.length}
+						count={data?.length}
 						rowsPerPage={rowsPerPage}
 						page={page}
 						onPageChange={handleChangePage}
@@ -305,6 +366,7 @@ const DataTable = ({ videos }) => {
 function mapStoreToProps(store) {
 	return {
 		videos: store.videos.videos,
+		subs: store.sub.subs,
 	};
 }
 

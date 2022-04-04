@@ -33,6 +33,7 @@ export function register(newUser) {
 			.post('/auth/register', newUser)
 			.then((res) => {
 				localStorage.setItem('user', JSON.stringify(res.data));
+				localStorage.setItem('darkMode', JSON.stringify(false));
 				dispatch({
 					type: types.REGISTER_SUCCESS,
 					payload: res.data,
@@ -53,6 +54,7 @@ export function logout() {
 			type: types.LOGOUT,
 		});
 		localStorage.clear();
+		sessionStorage.clear();
 		window.location.replace('/');
 	};
 }
