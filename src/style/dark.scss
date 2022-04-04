@@ -4,18 +4,6 @@
 	background: #111;
 	color: rgb(156, 156, 156);
 
-	.chart-grid {
-		stroke: rgba(228, 228, 228, 0.219);
-	}
-
-	.transaction-table {
-		background: #111;
-
-		.table-cell {
-			color: grey;
-		}
-	}
-
 	.navbar {
 		color: #999;
 		border-color: #333;
@@ -52,21 +40,56 @@
 		}
 	}
 
-	.data-table {
-		.data-grid {
-			color: grey;
-			border: none;
-
-			.view-btn,
-			.delete-btn,
-			.cell-with-status {
+	.widgetLg {
+		.item {
+			.display-btn {
+				background: #333;
 				color: grey;
-				border: none;
 			}
+		}
+	}
+
+	.chart-grid {
+		stroke: rgba(228, 228, 228, 0.219);
+	}
+
+	.transaction-table {
+		background: #111;
+
+		.table-cell {
+			color: grey;
+		}
+	}
+
+	.data-table {
+		.title {
+			color: grey;
+		}
+
+		.table {
+			background: #111;
+
+			.table-cell {
+				color: grey;
+			}
+
+			.checkbox {
+				color: grey;
+			}
+		}
+
+		.pagination {
+			background: #111;
+			color: grey;
 		}
 	}
 
 	input {
 		background: transparent;
+	}
+
+	select {
+		background: #111;
+		color: grey;
 	}
 }

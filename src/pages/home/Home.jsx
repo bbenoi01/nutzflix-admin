@@ -5,7 +5,7 @@ import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Widget from '../../components/widget/Widget';
 // import Featured from '../../components/featured/Featured';
-import NewSubscriberInfo from '../../components/newSubscriberInfo/NewSubscriberInfo';
+import WidgetLg from '../../components/widgetLg/WidgetLg';
 import Chart from '../../components/chart/Chart';
 import TransactionTable from '../../components/transactionTable/TransactionTable';
 
@@ -66,7 +66,7 @@ const Home = () => {
 					<Widget type='balance' />
 				</div>
 				<div className='charts'>
-					<NewSubscriberInfo />
+					<WidgetLg />
 					<Chart data={subStats} title='Subscriber Analytics' aspect={4 / 1} />
 				</div>
 				<div className='list-container'>

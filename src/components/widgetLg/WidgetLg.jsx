@@ -1,9 +1,9 @@
-import './newSubscriberInfo.scss';
+import './widgetLg.scss';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const NewSubscriberInfo = () => {
+const WidgetLg = () => {
 	const [newSubs, setNewSubs] = useState([]);
 
 	useEffect(() => {
@@ -24,7 +24,7 @@ const NewSubscriberInfo = () => {
 	}, []);
 
 	return (
-		<div className='new-sub-info'>
+		<div className='widgetLg'>
 			<span className='title'>New Subscribers</span>
 			<ul className='sub-list'>
 				{newSubs.map((sub) => (
@@ -37,7 +37,7 @@ const NewSubscriberInfo = () => {
 						<div className='sub'>
 							<span className='username'>{sub?.username}</span>
 						</div>
-						<button>
+						<button className='display-btn'>
 							<VisibilityIcon className='icon' />
 							Display
 						</button>
@@ -48,4 +48,4 @@ const NewSubscriberInfo = () => {
 	);
 };
 
-export default NewSubscriberInfo;
+export default WidgetLg;
