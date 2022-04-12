@@ -30,7 +30,32 @@ const VideoReducer = (state = INITIAL_STATE, action) => {
 			return {
 				...state,
 				isFetching: false,
-				reeors: payload,
+				errors: payload,
+			};
+		}
+
+		case types.CREATE_VIDEO_START: {
+			return {
+				...state,
+				isFetching: true,
+				errors: {},
+			};
+		}
+
+		case types.CREATE_VIDEO_SUCCESS: {
+			return {
+				...state,
+				videos: payload,
+				isFetching: false,
+				errors: {},
+			};
+		}
+
+		case types.CREATE_VIDEO_FAILURE: {
+			return {
+				...state,
+				isFetching: false,
+				errors: payload,
 			};
 		}
 
