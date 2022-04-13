@@ -1,18 +1,13 @@
 import { types } from '../../types';
-import axios from 'axios';
+import nutzflixApi from '../../api/nutzflixApi';
 
 export function getVideos() {
 	return (dispatch) => {
 		dispatch({
 			type: types.GET_VIDEOS_START,
 		});
-		axios
-			.get('/videos', {
-				headers: {
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDM4YjZjY2NlM2I5YjBjYzQyNGQwMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0ODgyNzcyMCwiZXhwIjoxNjQ5MjU5NzIwfQ.uaHCZbK5f7zHg03EnTi2-2ZZV3-A_KVRXK46Q5Yb7yI',
-				},
-			})
+		nutzflixApi
+			.get('/videos')
 			.then((res) => {
 				sessionStorage.setItem('videos', JSON.stringify(res.data));
 				dispatch({
@@ -29,18 +24,89 @@ export function getVideos() {
 	};
 }
 
+export function createVideo(videoData) {
+	return (dispatch) => {
+		dispatch({
+			type: types.CREATE_VIDEO_START,
+		});
+		nutzflixApi
+			.post('/videos', videoData)
+			.then((res) => {
+				sessionStorage.setItem(
+					'videos',
+					JSON.stringify(res.data.updatedVideoList)
+				);
+				dispatch({
+					type: types.CREATE_VIDEO_SUCCESS,
+					payload: res.data.updatedVideoList,
+				});
+			})
+			.catch((err) => {
+				dispatch({
+					type: types.CREATE_VIDEO_FAILURE,
+					payload: err.response.data,
+				});
+			});
+	};
+}
+
+export function getVideo(id) {
+	return (dispatch) => {
+		dispatch({
+			type: types.GET_SINGLE_VIDEO_START,
+		});
+		nutzflixApi
+			.get(`/videos/find/${id}`)
+			.then((res) => {
+				sessionStorage.setItem('video', JSON.stringify(res.data));
+				dispatch({
+					type: types.GET_SINGLE_VIDEO_SUCCESS,
+					payload: res.data,
+				});
+			})
+			.catch((err) => {
+				dispatch({
+					type: types.GET_SINGLE_VIDEO_FAILURE,
+					payload: err.response.data,
+				});
+			});
+	};
+}
+
+export function updateVideo(id, videoData) {
+	return (dispatch) => {
+		dispatch({
+			type: types.UPDATE_VIDEO_START,
+		});
+		nutzflixApi
+			.put(`/${id}`, videoData)
+			.then((res) => {
+				sessionStorage.setItem(
+					'videos',
+					JSON.stringify(res.data.updatedVideos)
+				);
+				sessionStorage.setItem('video', JSON.stringify(res.data.updatedVideo));
+				dispatch({
+					type: types.UPDATE_VIDEO_SUCCESS,
+					payload: res.data,
+				});
+			})
+			.catch((err) => {
+				dispatch({
+					type: types.UPDATE_VIDEO_FAILURE,
+					payload: err.response.data,
+				});
+			});
+	};
+}
+
 export function deleteVideo(id) {
 	return (dispatch) => {
 		dispatch({
 			type: types.DELETE_VIDEO_START,
 		});
-		axios
-			.delete(`/videos/${id}`, {
-				headers: {
-					Authorization:
-						'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDM4YjZjY2NlM2I5YjBjYzQyNGQwMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0ODgyNzcyMCwiZXhwIjoxNjQ5MjU5NzIwfQ.uaHCZbK5f7zHg03EnTi2-2ZZV3-A_KVRXK46Q5Yb7yI',
-				},
-			})
+		nutzflixApi
+			.delete(`/videos/${id}`)
 			.then((res) => {
 				sessionStorage.setItem(
 					'videos',

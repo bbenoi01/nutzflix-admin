@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
+import nutzflixApi from '../../api/nutzflixApi';
 import './home.scss';
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
@@ -32,12 +32,7 @@ const Home = () => {
 	useEffect(() => {
 		const getStats = async () => {
 			try {
-				const res = await axios.get('/users/stats', {
-					headers: {
-						Authorization:
-							'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNDM4YjZjY2NlM2I5YjBjYzQyNGQwMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0ODgyNzcyMCwiZXhwIjoxNjQ5MjU5NzIwfQ.uaHCZbK5f7zHg03EnTi2-2ZZV3-A_KVRXK46Q5Yb7yI',
-					},
-				});
+				const res = await nutzflixApi.get('/users/stats');
 				const statsList = res?.data?.sort(function (a, b) {
 					return a._id - b._id;
 				});

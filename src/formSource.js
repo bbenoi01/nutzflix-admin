@@ -39,23 +39,9 @@ export const videoInputs = [
 	},
 	{
 		id: 4,
-		name: 'genre',
-		label: 'Genre',
-		type: 'text',
-		placeholder: 'Horror...',
-	},
-	{
-		id: 5,
 		name: 'runTime',
 		label: 'Run Time',
 		type: 'text',
 		placeholder: '108 min...',
-	},
-	{
-		id: 6,
-		name: 'rating',
-		label: 'Rating',
-		type: 'text',
-		placeholder: 'MPAA Rating...',
 	},
 ];

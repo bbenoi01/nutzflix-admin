@@ -3,24 +3,82 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import Navbar from '../../components/navbar/Navbar';
 import DriveFolderUploadOutlinedIcon from '@mui/icons-material/DriveFolderUploadOutlined';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import storage from '../../firebase';
+
+import { createVideo } from '../../reducers/videoReducer/VideoActions';
 
 const New = ({ inputs, title }) => {
 	const [video, setVideo] = useState(null);
 	const [sub, setSub] = useState(null);
 	const [img, setImg] = useState(null);
-	const [imgTitle, setImgTitle] = useState(null);
-	const [imgSm, setImgSm] = useState(null);
 	const [trailer, setTrailer] = useState(null);
 	const [media, setMedia] = useState(null);
 	const [profilePhoto, setProfilePhoto] = useState(null);
+	const [uploaded, setUploaded] = useState(0);
+	const dispatch = useDispatch();
 
 	const handleChange = (e) => {
-		const value = e.target.value;
+		let value;
+		if (e.target.value === 'true') {
+			value = true;
+		} else if (e.target.value === 'false') {
+			value = false;
+		} else {
+			value = e.target.value;
+		}
+
 		if (title === 'Add New Subscriber') {
 			setSub({ ...sub, [e.target.name]: value });
 		} else {
 			setVideo({ ...video, [e.target.name]: value });
 		}
+	};
+
+	const upload = (items) => {
+		items.forEach((item) => {
+			const fileName = new Date().getTime() + item.label + item.file.name;
+			const storageRef = ref(storage, `/items/${video?.title}/${fileName}`);
+			const uploadTask = uploadBytesResumable(storageRef, item.file);
+			uploadTask.on(
+				'state_changed',
+				(snapshot) => {
+					const progress =
+						(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+					console.log('Upload is ' + parseInt(progress) + '% done');
+					switch (snapshot.state) {
+						case 'paused':
+							console.log('Upload paused');
+							break;
+						case 'running':
+							console.log('Upload running');
+							break;
+						// no default
+					}
+				},
+				(err) => {
+					console.log(err);
+				},
+				() => {
+					getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+						setVideo((prev) => {
+							return { ...prev, [item.label]: url };
+						});
+						setUploaded((prev) => prev + 1);
+					});
+				}
+			);
+		});
+	};
+
+	const handleUpload = (e) => {
+		e.preventDefault();
+		upload([
+			{ file: img, label: 'img' },
+			{ file: trailer, label: 'trailer' },
+			{ file: media, label: 'media' },
+		]);
 	};
 
 	return (
@@ -101,7 +159,32 @@ const New = ({ inputs, title }) => {
 										hidden
 									/>
 								</div>
-							) : null}
+							) : (
+								<div className='form-input'>
+									<div className='file-input-wrapper'>
+										<>
+											<label htmlFor='img'>
+												Image:
+												<DriveFolderUploadOutlinedIcon className='icon' />
+											</label>
+											<input
+												type='file'
+												id='img'
+												onChange={(e) => setImg(e.target.files[0])}
+												hidden
+											/>
+										</>
+										<div className='file-preview'>
+											<img
+												src={
+													img ? URL.createObjectURL(img) : '/no-image-alt.jpg'
+												}
+												alt=''
+											/>
+										</div>
+									</div>
+								</div>
+							)}
 							{inputs.map((input) => (
 								<div className='form-input' key={input.id}>
 									<label htmlFor={input.label}>{input.label}</label>
@@ -127,82 +210,56 @@ const New = ({ inputs, title }) => {
 											<option value='true'>Yes</option>
 										</select>
 									</div>
-									<div className='form-input'>
-										<div className='file-input-wrapper'>
-											<>
-												<label htmlFor='img'>
-													Image:
-													<DriveFolderUploadOutlinedIcon className='icon' />
-												</label>
+									{video?.isSeries && (
+										<>
+											<div className='form-input'>
+												<label htmlFor='series-type'>Series Type</label>
+												<select
+													name='seriesType'
+													id='series-type'
+													onChange={handleChange}
+												>
+													<option value=''>Choose...</option>
+													<option value='TV'>TV</option>
+													<option value='Movie'>Movie</option>
+												</select>
+											</div>
+											<div className='form-input'>
+												<label htmlFor='series-title'>Series Title</label>
 												<input
-													type='file'
-													id='img'
-													onChange={(e) => setImg(e.target.files[0])}
-													hidden
-												/>
-											</>
-											<div className='file-preview'>
-												<img
-													src={
-														img ? URL.createObjectURL(img) : '/no-image-alt.jpg'
-													}
-													alt=''
+													type='text'
+													id='series-title'
+													name='seriesTitle'
+													placeholder='Ally McBeal...'
+													onChange={handleChange}
 												/>
 											</div>
-										</div>
-									</div>
-									<div className='form-input'>
-										<div className='file-input-wrapper'>
-											<>
-												<label htmlFor='imgTitle'>
-													Title Image:
-													<DriveFolderUploadOutlinedIcon className='icon' />
-												</label>
-												<input
-													type='file'
-													id='imgTitle'
-													onChange={(e) => setImgTitle(e.target.files[0])}
-													hidden
-												/>
-											</>
-											<div className='file-preview'>
-												<img
-													src={
-														imgTitle
-															? URL.createObjectURL(imgTitle)
-															: '/no-image-alt.jpg'
-													}
-													alt=''
-												/>
-											</div>
-										</div>
-									</div>
-									<div className='form-input'>
-										<div className='file-input-wrapper'>
-											<>
-												<label htmlFor='imgSm'>
-													Thumbnail:
-													<DriveFolderUploadOutlinedIcon className='icon' />
-												</label>
-												<input
-													type='file'
-													id='imgSm'
-													onChange={(e) => setImgSm(e.target.files[0])}
-													hidden
-												/>
-											</>
-											<div className='file-preview'>
-												<img
-													src={
-														imgSm
-															? URL.createObjectURL(imgSm)
-															: '/no-image-alt.jpg'
-													}
-													alt=''
-												/>
-											</div>
-										</div>
-									</div>
+											{video?.seriesType === 'TV' && (
+												<>
+													<div className='form-input'>
+														<label htmlFor='season'>Season</label>
+														<input
+															type='text'
+															id='season'
+															name='season'
+															placeholder='Season 1...'
+															onChange={handleChange}
+														/>
+													</div>
+													<div className='form-input'>
+														<label htmlFor='episode'>Episode</label>
+														<input
+															type='text'
+															id='episode'
+															name='episode'
+															placeholder='Episode 5...'
+															onChange={handleChange}
+														/>
+													</div>
+												</>
+											)}
+										</>
+									)}
 								</>
 							) : (
 								<div className='form-input'>
@@ -213,7 +270,13 @@ const New = ({ inputs, title }) => {
 									</select>
 								</div>
 							)}
-							<button>Send</button>
+							{uploaded === 3 ? (
+								<button onClick={() => dispatch(createVideo(video))}>
+									Create
+								</button>
+							) : (
+								<button onClick={handleUpload}>Upload</button>
+							)}
 						</form>
 					</div>
 				</div>
