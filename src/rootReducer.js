@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
 	dark: DarkModeReducer,
 	// list: ListReducer,
 	sub: SubReducer,
-	videos: VideoReducer,
+	video: VideoReducer,
 });
 
 export default rootReducer;

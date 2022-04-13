@@ -41,7 +41,16 @@ const App = ({ darkMode, user }) => {
 							/>
 							<Route
 								path=':subId'
-								element={user ? <Single /> : <Navigate to={'/'} replace />}
+								element={
+									user ? (
+										<Single
+											inputs={subscriberInputs}
+											title='Update Subscriber'
+										/>
+									) : (
+										<Navigate to={'/'} replace />
+									)
+								}
 							/>
 							<Route
 								path='new'
@@ -63,7 +72,13 @@ const App = ({ darkMode, user }) => {
 							/>
 							<Route
 								path=':videoId'
-								element={user ? <Single /> : <Navigate to={'/'} replace />}
+								element={
+									user ? (
+										<Single inputs={videoInputs} title='Update Video' />
+									) : (
+										<Navigate to={'/'} replace />
+									)
+								}
 							/>
 							<Route
 								path='new'

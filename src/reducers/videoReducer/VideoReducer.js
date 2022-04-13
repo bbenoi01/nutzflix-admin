@@ -1,8 +1,9 @@
 import { types } from '../../types';
 
 const INITIAL_STATE = {
-	videos: JSON.parse(sessionStorage.getItem('videos')) || null,
 	isFetching: false,
+	videos: JSON.parse(sessionStorage.getItem('videos')) || null,
+	video: JSON.parse(sessionStorage.getItem('video')) || null,
 	errors: {},
 };
 
@@ -34,6 +35,31 @@ const VideoReducer = (state = INITIAL_STATE, action) => {
 			};
 		}
 
+		case types.GET_SINGLE_VIDEO_START: {
+			return {
+				...state,
+				isFetching: true,
+				errors: {},
+			};
+		}
+
+		case types.GET_SINGLE_VIDEO_SUCCESS: {
+			return {
+				...state,
+				isFetching: false,
+				video: payload,
+				errors: {},
+			};
+		}
+
+		case types.GET_SINGLE_VIDEO_FAILURE: {
+			return {
+				...state,
+				isFetching: false,
+				errors: payload,
+			};
+		}
+
 		case types.CREATE_VIDEO_START: {
 			return {
 				...state,
@@ -52,6 +78,32 @@ const VideoReducer = (state = INITIAL_STATE, action) => {
 		}
 
 		case types.CREATE_VIDEO_FAILURE: {
+			return {
+				...state,
+				isFetching: false,
+				errors: payload,
+			};
+		}
+
+		case types.UPDATE_VIDEO_START: {
+			return {
+				...state,
+				isFetching: true,
+				errors: {},
+			};
+		}
+
+		case types.UPDATE_VIDEO_SUCCESS: {
+			return {
+				...state,
+				isFetching: false,
+				videos: payload.updatedVideos,
+				video: payload.updatedVideo,
+				errors: {},
+			};
+		}
+
+		case types.UPDATE_VIDEO_FAILURE: {
 			return {
 				...state,
 				isFetching: false,
@@ -92,8 +144,11 @@ const VideoReducer = (state = INITIAL_STATE, action) => {
 		}
 
 		case types.LOGOUT: {
+			sessionStorage.removeItem('videos');
+			sessionStorage.removeItem('video');
 			return {
 				videos: null,
+				video: null,
 				isFetching: false,
 				errors: {},
 			};

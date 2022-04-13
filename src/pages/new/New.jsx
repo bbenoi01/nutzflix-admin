@@ -159,7 +159,32 @@ const New = ({ inputs, title }) => {
 										hidden
 									/>
 								</div>
-							) : null}
+							) : (
+								<div className='form-input'>
+									<div className='file-input-wrapper'>
+										<>
+											<label htmlFor='img'>
+												Image:
+												<DriveFolderUploadOutlinedIcon className='icon' />
+											</label>
+											<input
+												type='file'
+												id='img'
+												onChange={(e) => setImg(e.target.files[0])}
+												hidden
+											/>
+										</>
+										<div className='file-preview'>
+											<img
+												src={
+													img ? URL.createObjectURL(img) : '/no-image-alt.jpg'
+												}
+												alt=''
+											/>
+										</div>
+									</div>
+								</div>
+							)}
 							{inputs.map((input) => (
 								<div className='form-input' key={input.id}>
 									<label htmlFor={input.label}>{input.label}</label>
@@ -235,30 +260,6 @@ const New = ({ inputs, title }) => {
 											)}
 										</>
 									)}
-									<div className='form-input'>
-										<div className='file-input-wrapper'>
-											<>
-												<label htmlFor='img'>
-													Image:
-													<DriveFolderUploadOutlinedIcon className='icon' />
-												</label>
-												<input
-													type='file'
-													id='img'
-													onChange={(e) => setImg(e.target.files[0])}
-													hidden
-												/>
-											</>
-											<div className='file-preview'>
-												<img
-													src={
-														img ? URL.createObjectURL(img) : '/no-image-alt.jpg'
-													}
-													alt=''
-												/>
-											</div>
-										</div>
-									</div>
 								</>
 							) : (
 								<div className='form-input'>

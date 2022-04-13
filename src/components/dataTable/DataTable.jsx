@@ -17,8 +17,11 @@ import { connect, useDispatch } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-import { deleteVideo } from '../../reducers/videoReducer/VideoActions';
-import { deleteSub } from '../../reducers/subReducer/SubActions';
+import {
+	getVideo,
+	deleteVideo,
+} from '../../reducers/videoReducer/VideoActions';
+import { getSub, deleteSub } from '../../reducers/subReducer/SubActions';
 
 const DataTable = ({ title, subs, videos }) => {
 	const [order, setOrder] = useState('asc');
@@ -366,6 +369,13 @@ const DataTable = ({ title, subs, videos }) => {
 																	}
 																	state={{ data }}
 																	style={{ textDecoration: 'none' }}
+																	onClick={
+																		dataType === 'videos'
+																			? () => dispatch(getVideo(data?._id))
+																			: dataType === 'subs'
+																			? () => dispatch(getSub(data?._id))
+																			: null
+																	}
 																>
 																	<EditIcon className='edit-btn' />
 																</Link>
@@ -407,7 +417,7 @@ const DataTable = ({ title, subs, videos }) => {
 function mapStoreToProps(store) {
 	return {
 		subs: store.sub.subs,
-		videos: store.videos.videos,
+		videos: store.video.videos,
 	};
 }
 

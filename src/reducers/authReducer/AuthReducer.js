@@ -1,8 +1,8 @@
 import { types } from '../../types';
 
 const INITIAL_STATE = {
-	user: JSON.parse(localStorage.getItem('user')) || null,
 	isFetching: false,
+	user: JSON.parse(localStorage.getItem('user')) || null,
 	errors: {},
 };
 
@@ -61,6 +61,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
 		}
 
 		case types.LOGOUT: {
+			localStorage.removeItem('user');
 			return {
 				user: null,
 				isFetching: false,
