@@ -1,26 +1,47 @@
 import { types } from '../../types';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = {
+	isFetching: false,
+	lists: JSON.parse(sessionStorage.getItem('lists')) || null,
+	list: JSON.parse(sessionStorage.getItem('list')) || null,
+	errors: {},
+};
 
 const ListReducer = (state = INITIAL_STATE, action) => {
 	const { type, payload } = action;
 
 	switch (type) {
-		case 'LIGHT': {
+		case types.GET_LISTS_START: {
 			return {
-				darkMode: false,
+				...state,
+				isFetching: true,
+				errors: {},
 			};
 		}
 
-		case 'DARK': {
+		case types.GET_LISTS_SUCCESS: {
 			return {
-				darkMode: true,
+				...state,
+				isFetching: false,
+				lists: payload,
+				errors: {},
 			};
 		}
 
-		case 'TOGGLE': {
+		case types.GET_LISTS_FAILURE: {
 			return {
-				darkMode: !state.darkMode,
+				...state,
+				isFetching: false,
+				errors: payload,
+			};
+		}
+
+		case types.LOGOUT: {
+			return {
+				isFetching: false,
+				lists: null,
+				list: null,
+				errors: {},
 			};
 		}
 		default:

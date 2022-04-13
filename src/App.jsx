@@ -5,7 +5,7 @@ import {
 	Navigate,
 } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { videoInputs, subscriberInputs } from './formSource';
+import { videoInputs, subscriberInputs, listInputs } from './formSource';
 import './style/dark.scss';
 
 import Home from './pages/home/Home';
@@ -85,6 +85,34 @@ const App = ({ darkMode, user }) => {
 								element={
 									user ? (
 										<New inputs={videoInputs} title='Add New Video' />
+									) : (
+										<Navigate to={'/'} replace />
+									)
+								}
+							/>
+						</Route>
+						<Route path='lists'>
+							<Route
+								index
+								element={
+									user ? <List title='Lists' /> : <Navigate to={'/'} replace />
+								}
+							/>
+							<Route
+								path=':listId'
+								element={
+									user ? (
+										<Single inputs={listInputs} title='Update List' />
+									) : (
+										<Navigate to={'/'} replace />
+									)
+								}
+							/>
+							<Route
+								path='new'
+								element={
+									user ? (
+										<New inputs={listInputs} title='Add New List' />
 									) : (
 										<Navigate to={'/'} replace />
 									)

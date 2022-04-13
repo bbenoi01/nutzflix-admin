@@ -23,7 +23,7 @@ import {
 } from '../../reducers/videoReducer/VideoActions';
 import { getSub, deleteSub } from '../../reducers/subReducer/SubActions';
 
-const DataTable = ({ title, subs, videos }) => {
+const DataTable = ({ title, subs, videos, lists }) => {
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('id');
 	const [selected, setSelected] = useState([]);
@@ -87,6 +87,29 @@ const DataTable = ({ title, subs, videos }) => {
 			{
 				id: 'series',
 				label: 'Series',
+			},
+			{
+				id: 'action',
+				label: 'Action',
+			},
+		];
+	} else if (dataType === 'lists') {
+		headCells = [
+			{
+				id: 'id',
+				label: 'ID',
+			},
+			{
+				id: 'title',
+				label: 'Title',
+			},
+			{
+				id: 'type',
+				label: 'Type',
+			},
+			{
+				id: 'genre',
+				label: 'Genre',
 			},
 			{
 				id: 'action',
@@ -232,7 +255,6 @@ const DataTable = ({ title, subs, videos }) => {
 	const handleDelete = (id) => {
 		if (dataType === 'subs') {
 			dispatch(deleteSub(id));
-			dispatch(deleteVideo(id));
 		} else if (dataType === 'videos') {
 			dispatch(deleteVideo(id));
 		}
@@ -243,15 +265,27 @@ const DataTable = ({ title, subs, videos }) => {
 			setDataSet(subs);
 		} else if (dataType === 'videos') {
 			setDataSet(videos);
+		} else if (dataType === 'lists') {
+			setDataSet(lists);
 		}
-	}, [dataType, subs, videos]);
+	}, [dataType, subs, videos, lists]);
+
+	console.log(lists);
 
 	return (
 		<div className='data-table'>
 			<div className='top'>
 				<h2 className='title'>{title}</h2>
 				<Link
-					to={dataType === 'subs' ? '/subs/new' : '/videos/new'}
+					to={
+						dataType === 'subs'
+							? '/subs/new'
+							: dataType === 'videos'
+							? '/videos/new'
+							: dataType === 'lists'
+							? '/lists/new'
+							: null
+					}
 					className='link'
 				>
 					Add New
@@ -309,31 +343,37 @@ const DataTable = ({ title, subs, videos }) => {
 															{data?._id}
 														</TableCell>
 														<TableCell className='table-cell'>
-															<div className='cell-wrapper'>
-																<img
-																	src={
-																		dataType === 'subs'
-																			? data?.profilePhoto ||
-																			  '/profile_avatar.jpg'
-																			: dataType === 'videos'
-																			? data?.img
-																			: '/no-image-alt.jpg'
-																	}
-																	alt=''
-																	className='image'
-																/>
-																{dataType === 'subs'
-																	? data?.username
-																	: dataType === 'videos'
-																	? data?.title
-																	: null}
-															</div>
+															{dataType === 'lists' ? (
+																data?.title
+															) : (
+																<div className='cell-wrapper'>
+																	<img
+																		src={
+																			dataType === 'subs'
+																				? data?.profilePhoto ||
+																				  '/profile_avatar.jpg'
+																				: dataType === 'videos'
+																				? data?.img
+																				: '/no-image-alt.jpg'
+																		}
+																		alt=''
+																		className='image'
+																	/>
+																	{dataType === 'subs'
+																		? data?.username
+																		: dataType === 'videos'
+																		? data?.title
+																		: null}
+																</div>
+															)}
 														</TableCell>
 														<TableCell className='table-cell'>
 															{dataType === 'subs'
 																? data?.email
 																: dataType === 'videos'
 																? data?.genre
+																: dataType === 'lists'
+																? data?.type
 																: null}
 														</TableCell>
 														<TableCell className='table-cell'>
@@ -341,17 +381,21 @@ const DataTable = ({ title, subs, videos }) => {
 																? data?.isAdmin?.toString()
 																: dataType === 'videos'
 																? data?.year
+																: dataType === 'lists'
+																? data?.genre
 																: null}
 														</TableCell>
-														<TableCell className='table-cell'>
-															{dataType === 'subs' ? (
-																data?.createdAt
-															) : dataType === 'videos' ? (
-																<span className={`rating ${data?.rating}`}>
-																	{data?.rating}
-																</span>
-															) : null}
-														</TableCell>
+														{dataType === 'lists' ? null : (
+															<TableCell className='table-cell'>
+																{dataType === 'subs' ? (
+																	data?.createdAt
+																) : dataType === 'videos' ? (
+																	<span className={`rating ${data?.rating}`}>
+																		{data?.rating}
+																	</span>
+																) : null}
+															</TableCell>
+														)}
 														{dataType === 'videos' ? (
 															<TableCell className='table-cell'>
 																{data?.isSeries?.toString()}
@@ -365,6 +409,8 @@ const DataTable = ({ title, subs, videos }) => {
 																			? `/subs/${data?._id}`
 																			: dataType === 'videos'
 																			? `/videos/${data?._id}`
+																			: dataType === 'lists'
+																			? `/lists/${data?._id}`
 																			: null
 																	}
 																	state={{ data }}
@@ -418,6 +464,7 @@ function mapStoreToProps(store) {
 	return {
 		subs: store.sub.subs,
 		videos: store.video.videos,
+		lists: store.list.lists,
 	};
 }
 

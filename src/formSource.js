@@ -45,3 +45,13 @@ export const videoInputs = [
 		placeholder: '108 min...',
 	},
 ];
+
+export const listInputs = [
+	{
+		id: 1,
+		name: 'title',
+		label: 'Title',
+		type: 'text',
+		placeholder: 'Best Movies...',
+	},
+];

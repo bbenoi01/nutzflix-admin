@@ -2,7 +2,8 @@ import './sidebar.scss';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+import ListIcon from '@mui/icons-material/List';
+// import CreditCardIcon from '@mui/icons-material/CreditCard';
 import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import InsertChartIcon from '@mui/icons-material/InsertChart';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
@@ -21,6 +22,7 @@ import {
 } from '../../reducers/darkModeReducer/DarkModeActions';
 import { getSubs } from '../../reducers/subReducer/SubActions';
 import { getVideos } from '../../reducers/videoReducer/VideoActions';
+import { getLists } from '../../reducers/listReducer/ListActions';
 
 const Sidebar = () => {
 	const dispatch = useDispatch();
@@ -40,7 +42,7 @@ const Sidebar = () => {
 						<DashboardIcon className='icon' />
 						<span>Dashboard</span>
 					</li>
-					<p className='title'>LISTS</p>
+					<p className='title'>QUICK MENU</p>
 					<Link
 						to='/subs'
 						state={{ dataType: 'subs' }}
@@ -63,10 +65,17 @@ const Sidebar = () => {
 							<span>Videos</span>
 						</li>
 					</Link>
-					<li>
-						<CreditCardIcon className='icon' />
-						<span>Orders</span>
-					</li>
+					<Link
+						to='/lists'
+						state={{ dataType: 'lists' }}
+						className='router-link'
+						onClick={() => dispatch(getLists())}
+					>
+						<li>
+							<ListIcon className='icon' />
+							<span>Lists</span>
+						</li>
+					</Link>
 					<li>
 						<LocalShippingIcon className='icon' />
 						<span>Delivery</span>
